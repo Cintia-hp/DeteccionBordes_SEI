@@ -1,0 +1,39 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_ScaleFactor":"0.634733",
+   "Default View_TopLeft":"0,-80",
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 7.0r6  2020-01-29 bk=1.5227 VDI=41 GEI=36 GUI=JA:10.0 non-TLS
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -lvl 7 -x 2180 -y 420 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -lvl 7 -x 2180 -y 450 -defaultsOSRD
+preplace inst proc_sys_reset_0 -pg 1 -lvl 1 -x 200 -y 640 -defaultsOSRD
+preplace inst hls_sobel_axi_stream_0 -pg 1 -lvl 3 -x 870 -y 530 -defaultsOSRD
+preplace inst axi_vdma_0 -pg 1 -lvl 4 -x 1210 -y 130 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 6 -x 1920 -y 470 -defaultsOSRD
+preplace inst ps7_0_axi_periph -pg 1 -lvl 2 -x 540 -y 490 -defaultsOSRD
+preplace inst axi_mem_intercon -pg 1 -lvl 5 -x 1550 -y 180 -defaultsOSRD
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 7 30 540 390J 640 710J 360 NJ 360 NJ 360 NJ 360 2140
+preplace netloc ACLK_1 1 0 7 20 530 380 630 690 250 1040 260 1400 370 1690 580 2130
+preplace netloc ARESETN_1 1 1 4 370 270 NJ 270 NJ 270 1390J
+preplace netloc S00_ARESETN_1 1 1 4 400 650 700 260 1030 280 1410
+preplace netloc processing_system7_0_M_AXI_GP0 1 1 6 400 350 NJ 350 NJ 350 NJ 350 NJ 350 2150
+preplace netloc ps7_0_axi_periph_M00_AXI 1 2 2 680 60 NJ
+preplace netloc ps7_0_axi_periph_M01_AXI 1 2 1 N 500
+preplace netloc axi_vdma_0_M_AXIS_MM2S 1 2 3 720 370 NJ 370 1380
+preplace netloc hls_sobel_axi_stream_0_p_dst 1 3 1 1020 80n
+preplace netloc axi_vdma_0_M_AXI_MM2S 1 4 1 N 70
+preplace netloc axi_vdma_0_M_AXI_S2MM 1 4 1 N 90
+preplace netloc axi_mem_intercon_M00_AXI 1 5 1 1710 170n
+preplace netloc axi_mem_intercon_M01_AXI 1 5 1 1700 190n
+preplace netloc processing_system7_0_DDR 1 6 1 2160J 420n
+preplace netloc processing_system7_0_FIXED_IO 1 6 1 NJ 450
+levelinfo -pg 1 0 200 540 870 1210 1550 1920 2180
+pagesize -pg 1 -db -bbox -sgen 0 0 2290 740
+"
+}
+{
+   "da_axi4_cnt":"5",
+   "da_clkrst_cnt":"1",
+   "da_ps7_cnt":"1"
+}
