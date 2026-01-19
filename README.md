@@ -41,69 +41,55 @@ Conjunto de funciones optimizadas para FPGA. Incluye operaciones de procesamient
 
 ## Estructura del IP: 
 
-```
+
 
 * `_src` y `_dst`: stream AXI4-Stream que transportan datos de imágenes. 
 
 * `rows` y `cols`: dimensiones de la imagen 
 
-* `#pragma HLS INTERFACE`: indica a HLS cómo generar los puertos hardware: axis (puertro de streaming AXI4) y s_axilite (puerto AXI-Lite para control/configuración) 
-```
- 
+* `#pragma HLS INTERFACE`: indica a HLS cómo generar los puertos hardware: `axis` (puertro de streaming AXI4) y `s_axilite` (puerto AXI-Lite para control/configuración) 
 
-Constantes de tamaño y ancho del bus. La IP queda parametrizada y puede procesar imágenes de tamaño fijo, con 32 bits por pixel en el stream 
+* Constantes de tamaño y ancho del bus. La IP queda parametrizada y puede procesar imágenes de tamaño fijo, con 32 bits por pixel en el stream 
 
-La función top-level realiza todo el flujo de procesameinto de la imagen 
+* La función top-level realiza todo el flujo de procesameinto de la imagen. Activa la ejecución en paralelo de los distions bloques, permitiendo que mietras un píxel entra, otro ya esté siendo procesado en la siguiente etapa. 
 
- 
-
-Activa la ejecución en paralelo de los distions bloques, permitiendo que mietras un píxel entra, otro ya esté siendo procesado en la siguiente etapa. 
-
-```
-
-* `AXIvideo2xfMat`: Convierte el stream de entrada _src en una matriz interna (xf::cv::Mat) usable por xfOpenCV. 
+* `AXIvideo2xfMat`: Convierte el stream de entrada `_src` en una matriz interna `xf::cv::Mat` usable por xfOpenCV. 
 
 * `Bgr2gray`: Convierte la imagen de color a escala de grises, reduciendo la complejidad para el cálculo de bordes. 
 
-* `Sobel`: Aplica el filtro de Sobel en X y Y, generando dos matrices intermedias (img_buf_1a, img_buf_1b) con los gradientes. 
+* `Sobel`: Aplica el filtro de Sobel en X y Y, generando dos matrices intermedias `img_buf_1a`, `img_buf_1b` con los gradientes. 
 
 * `AddWeighted`: Combina los gradientes X e Y para obtener la magnitud final del borde. 
 
 * `Gray2bgr`: Convierte la imagen de vuelta a color . 
 
-* `XfMat2AXIvideo`: Convierte la matriz de salida a un stream AXI4-Stream _dst, listo para enviarse a VDMA o directamente a un bloque de visualización 
-```
+* `XfMat2AXIvideo`: Convierte la matriz de salida a un stream AXI4-Stream `_dst`, listo para enviarse a VDMA o directamente a un bloque de visualización 
+
 Cada etapa tiene su propio buffer para permitir dataflow y paralelismo. Se usan tipos como `XF_8UC1` y `XF_8UC3` para representar imágenes de 1 canal (gris) o 3 canales (color). 
 
 ## Test bench 
 
 Se creó un test bench para validar el IP antes de integrarlo en Vivado. 
 
-Usa OpenCV para cargar una imagen 
+1. Usa OpenCV para cargar una imagen 
 
- 
+2. Convierte la imagen a AXI stream
 
-Convierte la imagen a AXI stream: 
+3. Llama al kernel HLS 
 
- 
+4. Convierte la salida de vuelta a Mat para guardar la imagen: 
 
-Llama al kernel HLS: 
-
- 
-
-Convierte la salida de vuelta a Mat para guardar la imagen: 
-
-Mostrar la imagen de entrada y la imagen resultante. 
+5. Mostrar la imagen de entrada y la imagen resultante. 
 
  
 
 # INTREGRACIÓN EN VIVADO 
 
-## Exportación del IP desde HLS 
+## 1. Exportación del IP desde HLS 
 
 El bloque generado: hls_sobel_axi_stream. 
 
-## Interconexión 
+## 2. Interconexión 
 
 El diseño hardware se estructura en torno al procesador Zynq-7000 (processing_system7_0), que actúa como núcleo de control y coordinación del procesamiento. El procesador se conecta directamente a la memoria DDR y a los pines físicos del dispositivo mediante el bloque FIXED_IO. 
 
@@ -119,7 +105,7 @@ Las imágenes se transmiten como flujos de píxeles desde y hacia el IP Sobel, s
 
 El bloque AXI DMA (o AXI VDMA) es el encargado de gestionar la transferencia de datos entre la memoria DDR y el IP Sobel, permitiendo que el procesamiento de imágenes se realice sin intervención directa del procesador. El procesador únicamente prepara la imagen en memoria y configura las transferencias, mientras que el DMA envía los datos al IP mediante AXI4-Stream, recibe la imagen procesada y la vuelve a almacenar en DDR. Este esquema desacopla el cálculo del procesador, aprovecha el procesamiento en streaming y el paralelismo de la FPGA, y reduce significativamente la carga de la CPU. 
 
-## Síntesis y bitstream 
+## 3. Síntesis y bitstream 
 
 Una vez finalizado el diseño en Vivado, se lleva a cabo la síntesis para obtener la implementación física en la FPGA y, tras verificar el diseño, se genera el bitstream. Este archivo se exporta junto con la descripción del sistema para su uso en Vitis, donde se desarrolla la aplicación software que controla el hardware. 
 
