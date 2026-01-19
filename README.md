@@ -7,7 +7,7 @@ El trabajo se centra en la transformación de un algoritmo Sobel desde una descr
 
 La detección de bordes identifica cambios bruscos de intensidad en una imagen, es decir, los contornos que delimitan objetos o estructuras. Estos bordes concentran la información visual más relevante y funcionan como un filtro inicial que simplifica la imagen, facilitando procesamientos más rápidos y eficientes en sistemas con limitaciones de tiempo y recursos. 
 
-# Justificaciones reales de uso: 
+## Justificaciones reales de uso: 
 
 Control de calidad en circuitos impresos (detección de pistas rotas, soldaduras defectuosas). 
 
@@ -25,21 +25,21 @@ El operador Sobel es un método muy usado para detectar bordes por su simplicida
 
 # IMPLEMENTACIÓN EN VITIS HLS 2022 
 
-Objetivo: 
+## Objetivo: 
 
 Convertir el algoritmo Sobel en hardware sintetizable. Esto permite que la operación de detección de bordes se ejecute directamente en FPGA, aprovechando la paralelización y el streaming de datos, en lugar de ejecutarse en software sobre la CPU. 
 
-Uso de librerías: 
+## Uso de librerías: 
 
-OpenCV 
+### OpenCV 
 
 Se utiliza en el test bench para validar el algoritmo en software. Permite leer imágenes, mostrar resultados y comprobar que la implementación hardware genera el mismo resultado que la versión software. 
 
-Vitis Vision / xfOpenCV 
+### Vitis Vision / xfOpenCV 
 
 Conjunto de funciones optimizadas para FPGA. Incluye operaciones de procesamiento de imágenes y permite generar IPs con interfaces AXI4-Stream, listas para integrarse con VDMA o otros bloques. 
 
-Estructura del IP: 
+## Estructura del IP: 
 
  
 
@@ -77,7 +77,7 @@ Cada etapa tiene su propio buffer para permitir dataflow y paralelismo.
 
 Se usan tipos como XF_8UC1 y XF_8UC3 para representar imágenes de 1 canal (gris) o 3 canales (color). 
 
-Test bench 
+## Test bench 
 
 Se creó un test bench para validar el IP antes de integrarlo en Vivado. 
 
@@ -101,11 +101,11 @@ Mostrar la imagen de entrada y la imagen resultante.
 
 # INTREGRACIÓN EN VIVADO 
 
-Exportación del IP desde HLS 
+## Exportación del IP desde HLS 
 
 El bloque generado: hls_sobel_axi_stream. 
 
-Interconexión 
+## Interconexión 
 
 El diseño hardware se estructura en torno al procesador Zynq-7000 (processing_system7_0), que actúa como núcleo de control y coordinación del procesamiento. El procesador se conecta directamente a la memoria DDR y a los pines físicos del dispositivo mediante el bloque FIXED_IO. 
 
@@ -121,7 +121,7 @@ Las imágenes se transmiten como flujos de píxeles desde y hacia el IP Sobel, s
 
 El bloque AXI DMA (o AXI VDMA) es el encargado de gestionar la transferencia de datos entre la memoria DDR y el IP Sobel, permitiendo que el procesamiento de imágenes se realice sin intervención directa del procesador. El procesador únicamente prepara la imagen en memoria y configura las transferencias, mientras que el DMA envía los datos al IP mediante AXI4-Stream, recibe la imagen procesada y la vuelve a almacenar en DDR. Este esquema desacopla el cálculo del procesador, aprovecha el procesamiento en streaming y el paralelismo de la FPGA, y reduce significativamente la carga de la CPU. 
 
-Síntesis y bitstream 
+## Síntesis y bitstream 
 
 Una vez finalizado el diseño en Vivado, se lleva a cabo la síntesis para obtener la implementación física en la FPGA y, tras verificar el diseño, se genera el bitstream. Este archivo se exporta junto con la descripción del sistema para su uso en Vitis, donde se desarrolla la aplicación software que controla el hardware. 
 
