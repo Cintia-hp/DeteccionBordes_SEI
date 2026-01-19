@@ -41,14 +41,14 @@ Conjunto de funciones optimizadas para FPGA. Incluye operaciones de procesamient
 
 ## Estructura del IP: 
 
- 
+```
 
 * `_src` y `_dst`: stream AXI4-Stream que transportan datos de imágenes. 
 
 * `rows` y `cols`: dimensiones de la imagen 
 
 * `#pragma HLS INTERFACE`: indica a HLS cómo generar los puertos hardware: axis (puertro de streaming AXI4) y s_axilite (puerto AXI-Lite para control/configuración) 
-
+```
  
 
 Constantes de tamaño y ancho del bus. La IP queda parametrizada y puede procesar imágenes de tamaño fijo, con 32 bits por pixel en el stream 
@@ -59,7 +59,7 @@ La función top-level realiza todo el flujo de procesameinto de la imagen
 
 Activa la ejecución en paralelo de los distions bloques, permitiendo que mietras un píxel entra, otro ya esté siendo procesado en la siguiente etapa. 
 
- 
+```
 
 * `AXIvideo2xfMat`: Convierte el stream de entrada _src en una matriz interna (xf::cv::Mat) usable por xfOpenCV. 
 
@@ -72,7 +72,7 @@ Activa la ejecución en paralelo de los distions bloques, permitiendo que mietra
 * `Gray2bgr`: Convierte la imagen de vuelta a color . 
 
 * `XfMat2AXIvideo`: Convierte la matriz de salida a un stream AXI4-Stream _dst, listo para enviarse a VDMA o directamente a un bloque de visualización 
-
+```
 Cada etapa tiene su propio buffer para permitir dataflow y paralelismo. Se usan tipos como `XF_8UC1` y `XF_8UC3` para representar imágenes de 1 canal (gris) o 3 canales (color). 
 
 ## Test bench 
