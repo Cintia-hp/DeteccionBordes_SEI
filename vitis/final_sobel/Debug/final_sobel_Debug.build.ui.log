@@ -1,0 +1,18 @@
+2026-01-19T16:04:22.759337900255-16:04:22 **** Incremental Build of configuration Debug for project final_sobel ****
+000-make all 
+000-make --no-print-directory pre-build
+000-a9-linaro-pre-build-step
+000-' '
+000-make --no-print-directory main-build
+000-'Building file: ../src/main.c'
+000-'Invoking: ARM v7 gcc compiler'
+000-arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/main.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -IC:/Users/cinti/Desktop/Final_SEI/intento_vivado/vitis13/design_1_wrapper/export/design_1_wrapper/sw/design_1_wrapper/standalone_ps7_cortexa9_0/bspinclude/include -MMD -MP -MF"src/main.d" -MT"src/main.o" -o "src/main.o" "../src/main.c"
+000/final_sobel/src/main.c2-1-1fatal error: xhls_sobel_axi_stream.h: No such file or directory2-../src/main.c:2:10: fatal error: xhls_sobel_axi_stream.h: No such file or directory
+000-    2 | #include "xhls_sobel_axi_stream.h"
+000-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~
+000-compilation terminated.
+000/final_sobel0-1-1make[1]: *** [src/subdir.mk:23: src/main.o] Error 12-make[1]: *** [src/subdir.mk:23: src/main.o] Error 1
+000/final_sobel0-1-1make: *** [makefile:34: all] Error 22-make: *** [makefile:34: all] Error 2
+00255-
+16:04:23 Build Finished (took 736ms)
+
