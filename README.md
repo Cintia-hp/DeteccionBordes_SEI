@@ -9,17 +9,17 @@ La detección de bordes identifica cambios bruscos de intensidad en una imagen, 
 
 ## Justificaciones reales de uso: 
 
-Control de calidad en circuitos impresos (detección de pistas rotas, soldaduras defectuosas). 
+* Control de calidad en circuitos impresos (detección de pistas rotas, soldaduras defectuosas). 
 
-Inspección industrial automatizada (detectar grietas, defectos, alineación incorrecta). 
+* Inspección industrial automatizada (detectar grietas, defectos, alineación incorrecta). 
 
-Sistemas de visión para robótica (identificación de contornos para navegación o manipulación). 
+* Sistemas de visión para robótica (identificación de contornos para navegación o manipulación). 
 
-Preprocesado en visión artificial (segmentación, reconocimiento de objetos). 
+* Preprocesado en visión artificial (segmentación, reconocimiento de objetos). 
 
-Aplicaciones médicas (resaltar estructuras anatómicas en imágenes). 
+* Aplicaciones médicas (resaltar estructuras anatómicas en imágenes). 
 
-Seguridad y vigilancia (detección de siluetas o intrusiones). 
+* Seguridad y vigilancia (detección de siluetas o intrusiones). 
 
 El operador Sobel es un método muy usado para detectar bordes por su simplicidad, robustez al ruido y bajo coste computacional. Aplica dos pequeños filtros para detectar cambios horizontales y verticales, con cálculos locales y repetitivos que permiten procesar muchos píxeles en paralelo, haciéndolo ideal para implementaciones hardware como las FPGA. 
 
@@ -43,11 +43,11 @@ Conjunto de funciones optimizadas para FPGA. Incluye operaciones de procesamient
 
  
 
-_src y _dst: stream AXI4-Stream que transportan datos de imágenes. 
+* `_src` y `_dst`: stream AXI4-Stream que transportan datos de imágenes. 
 
-rows y cols: dimensiones de la imagen 
+* `rows` y `cols`: dimensiones de la imagen 
 
-#pragma HLS INTERFACE: indica a HLS cómo generar los puertos hardware: axis (puertro de streaming AXI4) y s_axilite (puerto AXI-Lite para control/configuración) 
+* `#pragma HLS INTERFACE`: indica a HLS cómo generar los puertos hardware: axis (puertro de streaming AXI4) y s_axilite (puerto AXI-Lite para control/configuración) 
 
  
 
@@ -61,21 +61,19 @@ Activa la ejecución en paralelo de los distions bloques, permitiendo que mietra
 
  
 
-AXIvideo2xfMat: Convierte el stream de entrada _src en una matriz interna (xf::cv::Mat) usable por xfOpenCV. 
+* `AXIvideo2xfMat`: Convierte el stream de entrada _src en una matriz interna (xf::cv::Mat) usable por xfOpenCV. 
 
-Bgr2gray: Convierte la imagen de color a escala de grises, reduciendo la complejidad para el cálculo de bordes. 
+* `Bgr2gray`: Convierte la imagen de color a escala de grises, reduciendo la complejidad para el cálculo de bordes. 
 
-Sobel: Aplica el filtro de Sobel en X y Y, generando dos matrices intermedias (img_buf_1a, img_buf_1b) con los gradientes. 
+* `Sobel`: Aplica el filtro de Sobel en X y Y, generando dos matrices intermedias (img_buf_1a, img_buf_1b) con los gradientes. 
 
-AddWeighted: Combina los gradientes X e Y para obtener la magnitud final del borde. 
+* `AddWeighted`: Combina los gradientes X e Y para obtener la magnitud final del borde. 
 
-Gray2bgr: Convierte la imagen de vuelta a color . 
+* `Gray2bgr`: Convierte la imagen de vuelta a color . 
 
-XfMat2AXIvideo: Convierte la matriz de salida a un stream AXI4-Stream _dst, listo para enviarse a VDMA o directamente a un bloque de visualización 
+* `XfMat2AXIvideo`: Convierte la matriz de salida a un stream AXI4-Stream _dst, listo para enviarse a VDMA o directamente a un bloque de visualización 
 
-Cada etapa tiene su propio buffer para permitir dataflow y paralelismo. 
-
-Se usan tipos como XF_8UC1 y XF_8UC3 para representar imágenes de 1 canal (gris) o 3 canales (color). 
+Cada etapa tiene su propio buffer para permitir dataflow y paralelismo. Se usan tipos como `XF_8UC1` y `XF_8UC3` para representar imágenes de 1 canal (gris) o 3 canales (color). 
 
 ## Test bench 
 
